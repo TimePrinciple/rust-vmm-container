@@ -3,7 +3,7 @@ set -ex
 
 apt-get update
 
-QEMU_TAG=v9.0.2
+QEMU_TAG=v9.1.0
 OUTPUT=/output
 mkdir $OUTPUT
 
