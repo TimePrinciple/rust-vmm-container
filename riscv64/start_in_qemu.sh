@@ -20,9 +20,13 @@ $QEMU_DIR/bin/qemu-system-riscv64 \
     -smp $CORES -m $MEM \
     -bios $OPENSBI_DIR/fw_jump.elf \
     -kernel $KERNEL_DIR/Image \
-    -device virtio-net-device,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::2222-:22 \
-    -virtfs local,path=$ROOTFS_DIR,mount_tag=rootfs,security_model=none,id=rootfs \
-    -append "root=rootfs rw rootfstype=9p rootflags=trans=virtio,cache=mmap,msize=512000 console=ttyS0 earlycon=sbi nokaslr rdinit=/sbin/init" 2>&1 &
+    -device virtio-net-device,netdev=usernet \
+    -netdev user,id=usernet,hostfwd=tcp::2222-:22 \
+    -drive file=$ROOTFS_IMG,format=raw,id=rootfs \
+    -device virtio-blk-device,drive=rootfs \
+    -fsdev local,security_model=passthrough,id=fsdev0,path=$WORKDIR \
+    -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=workdir \
+    -append "root=/dev/vda rw console=ttyS0 earlycon=sbi nokaslr rdinit=/sbin/init"
 
 # Copy WORKDIR to ROOTFS_DIR
 cp -a $WORKDIR $ROOTFS_DIR/root
