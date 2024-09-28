@@ -133,4 +133,6 @@ if [ "$ARCH" == "riscv64" ]; then
     mkdir -p /root/.ssh
     # Setup network
     echo $'auto lo\niface lo inet loopback\n\nauto eth0\niface eth0 inet dhcp\n' > /etc/network/interfaces
+    # Mount workdir to /root/workdir
+    echo "workdir	/root/workdir	9p	trans=virtio,version=9p2000.L	0	0" > /etc/fstab
 fi
